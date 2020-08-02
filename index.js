@@ -39,6 +39,11 @@ io.on('connection', function(socket) {
         io.emit('disconnect');
     }
   });
+
+  socket.on('markGreen', function(cardId) {
+    console.log(cardId);
+    socket.broadcast.emit('markCardGreen', cardId);
+  });
 });
 
 http.listen(port, function(){

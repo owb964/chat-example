@@ -588,7 +588,6 @@ Swarm
 Sweater
 Swimming
 Swing
-Tachometer
 Talk
 Taxi
 Teacher
@@ -628,9 +627,7 @@ Tub
 Tuba
 Tutor
 Television
-Twang
 Twig
-Twitterpated
 Type
 Unemployed
 Upgrade
@@ -643,10 +640,7 @@ Wax
 Wedding
 Weed
 Welder
-Whatever
 Wheelchair
-Whiplash
-Whisk
 Whistle
 White
 Wig
@@ -660,7 +654,6 @@ World
 Worm
 Wristwatch
 Yardstick
-Zamboni
 Zen
 Zero
 Zipper

@@ -1,0 +1,52 @@
+body {
+	background-color: #fed766;
+	font-family: 'Baloo Bhai', cursive;
+}
+
+#header{
+	text-align: center;
+}
+
+h1{
+	text-align: center;
+	margin: 30px 20px auto;
+	text-transform: uppercase;
+}
+
+#clearButton{
+	margin: 30px auto;
+	border-radius: 20px;
+	font-size: 20px;
+	font-weight: bold;
+	padding: 5px 20px;
+	border: 4px solid black;
+	outline: none;
+}
+
+.game-board{
+	height: 600px;
+	width: 600px;
+	margin: 0 auto;
+	margin-right: 200px;
+	margin-left: 100px;
+	margin-bottom: 50px;
+	padding: 0px;
+	float: left;
+}
+
+.player-card{
+	height: 150px;
+	width: 150px;
+	margin: 0 auto;
+	padding: 0px;
+	float: left;
+}
+
+.grid{
+    display: inline-block;
+    background-color: #FFFFFF;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: content-box;
+}

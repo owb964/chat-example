@@ -56,7 +56,7 @@ function setup() {
     var allWords = text.split("\u21b5").join('');
     console.log("allWords 57");
     console.log(allWords);
-    var allWords = text.split("\r\n");
+    var allWords = text.split("\n");
     console.log("allWords 60");
     console.log(allWords);
 

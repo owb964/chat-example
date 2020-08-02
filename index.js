@@ -53,6 +53,7 @@ http.listen(port, function(){
 function setup() {
     var spyIDs = Object.keys(spies);
     var text = fs.readFileSync("public/assets/words.txt", "utf-8");
+    text = text.replace(/\u21b5/g,'');
     var allWords = text.split("\r\n");
 
     // set up the codewords

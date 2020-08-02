@@ -1,6 +1,5 @@
 var board = document.querySelector('.game-board');
 var playerCard = document.querySelector('.player-card');
-var button = document.getElementById('clearButton');
 var socket = io();
 
 function setupGame() {
@@ -134,20 +133,6 @@ function addDivsToPlayerCards(playerData) {
     console.log(gridCellDimensions);
 }
 
-// change grid square color to red
-//function changeColor() {
-//    var socket = io();
-//    socket.emit('clickedSquare', "something");
-//    this.style.backgroundColor = '#ff9999';
-//}
-
-// clear grid + prompt for new grid size
-function clear() {
-    while (board.hasChildNodes()) {
-        board.removeChild(board.lastChild); // removes all grid squares
-    }
-}
-
 function clickCivilian() {
     if (!this.checked) {
         this.parentNode.parentNode.style.backgroundColor = '#FFFFFF';
@@ -168,5 +153,4 @@ function clickGreen() {
     socket.emit('markGreen', cardId);
 }
 
-button.addEventListener('click', clear);
 window.onload = setupGame();

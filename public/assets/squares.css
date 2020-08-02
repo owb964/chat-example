@@ -25,11 +25,17 @@ h1{
 
 .game-board{
 	height: 600px;
-	width: 600px;
+	width: 800px;
 	margin: 0 auto;
 	margin-right: 200px;
 	margin-left: 100px;
 	margin-bottom: 50px;
+	padding: 0px;
+	float: left;
+}
+
+.player-card-and-turns{
+	margin: 0 auto;
 	padding: 0px;
 	float: left;
 }
@@ -39,7 +45,10 @@ h1{
 	width: 150px;
 	margin: 0 auto;
 	padding: 0px;
-	float: left;
+}
+
+.turn-counter{
+    margin-top: 100px;
 }
 
 .grid{

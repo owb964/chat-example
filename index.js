@@ -54,11 +54,7 @@ function setup() {
     var spyIDs = Object.keys(spies);
     var text = fs.readFileSync("public/assets/words.txt", "utf-8");
     var allWords = text.split("\u21b5").join('');
-    console.log("allWords 57");
-    console.log(allWords);
     var allWords = text.split("\n");
-    console.log("allWords 60");
-    console.log(allWords);
 
     // set up the codewords
     var bound = allWords.length;

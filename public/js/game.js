@@ -36,7 +36,8 @@ function setupGame() {
 }
 
 function addDivsToGameBoard(codeWords) {
-    var gridCellDimensions = ((600 / 5) - 2).toFixed(2);
+    var height = ((600 / 5) - 2).toFixed(2);
+    var width = ((800 / 5) - 2).toFixed(2);
     var gridSize = 25;
 
     // create grid squares & add to board
@@ -47,8 +48,8 @@ function addDivsToGameBoard(codeWords) {
         newDiv.textContent = codeWords[wordCounter];
         board.appendChild(newDiv);
         newDiv.classList.add('grid');
-        newDiv.style.height = gridCellDimensions + 'px';
-        newDiv.style.width = gridCellDimensions + 'px';
+        newDiv.style.height = height + 'px';
+        newDiv.style.width = width + 'px';
         newDiv.style.border = '1px solid black';
         newDiv.appendChild(document.createElement("br"));
         newDiv.appendChild(document.createElement("br"));
@@ -76,7 +77,7 @@ function addDivsToGameBoard(codeWords) {
         var civLabel = document.createElement('label');
         civLabel.setAttribute("for", civCheckbox.id);
         civLabel.style.fontSize = '10px';
-        civLabel.appendChild(document.createTextNode('civ'));
+        civLabel.appendChild(document.createTextNode('civilian'));
         civDiv.appendChild(civCheckbox);
         civDiv.appendChild(civLabel);
 
@@ -89,7 +90,6 @@ function addDivsToGameBoard(codeWords) {
     }
 
     var gridCells = document.querySelectorAll('.grid');
-    console.log(gridCellDimensions);
 }
 
 function addDivsToPlayerCards(playerData) {

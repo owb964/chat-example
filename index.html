@@ -4,12 +4,17 @@
     <link rel="stylesheet" href="assets/squares.css" type="text/css">
   </head>
   <body>
-  <div id="header">
+  <div id="header" style="margin-bottom: 50px">
     <h1>Codenames Duet</h1>
   </div>
   <div class="entire-game">
     <div class="game-board"></div>
-    <div class="player-card"></div>
+    <div class="player-card-and-turns">
+      <br>
+      <div class="player-card"></div>
+      <br>
+      <div class="turn-counter"></div>
+    </div>
   </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>

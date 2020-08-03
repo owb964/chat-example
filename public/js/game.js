@@ -7,14 +7,16 @@ function setupGame() {
         var button_classes, value = +$('.counter').val();
         button_classes = $(e.currentTarget).prop('class');
         if (button_classes.indexOf('up_count') !== -1) {
-            value = (value) + 1;
+            value++;
             socket.emit('updateTurns', true);
+            $('.counter').val(value);
         } else {
-            value = (value) - 1;
-            socket.emit('updateTurns', false);
+            if (value > 0) {
+                value--;
+                socket.emit('updateTurns', false);
+                $('.counter').val(value);
+            }
         }
-        value = value < 0 ? 0 : value;
-        $('.counter').val(value);
     });
 
     socket.on('updateTurnCounter', function(increase) {
@@ -31,23 +33,17 @@ function setupGame() {
     });
 
     socket.on('initPlayerCard', function(data) {
-        console.log("init player card");
-        console.log(data);
         addDivsToPlayerCards(data);
     });
 
     socket.on('initGrid', function(codeWords, socket) {
-        console.log("init grid");
-        console.log(codeWords);
         addDivsToGameBoard(codeWords, socket);
     });
 
     socket.on('markCardGreen', function(id) {
-        console.log(id);
         var card = document.getElementById(id);
         var greenId = "green-" + id.substring(id.indexOf('-') + 1);
         var greenCheckbox = document.getElementById(greenId);
-        console.log(greenCheckbox);
         if (greenCheckbox.checked) {
             greenCheckbox.checked = false;
             card.style.backgroundColor = '#FFFFFF';
@@ -120,9 +116,6 @@ function addDivsToPlayerCards(playerData) {
     var gridSize = 25;
 
     const cards = playerData.cards;
-    cards.sort(function(a, b) {
-        return a - b;
-    });
     const asses = playerData.assassins;
     asses.sort(function(a, b) {
         return a - b;
@@ -130,8 +123,6 @@ function addDivsToPlayerCards(playerData) {
 
     var cardIndex = 0, assIndex = 0, gridCounter = 0;
     // create grid squares & add to player card
-    console.log("cards: " + cards);
-    console.log("assassins: " + asses);
     while (gridSize > 0) {
         var newDiv = document.createElement('div');
         playerCard.appendChild(newDiv);
@@ -153,7 +144,6 @@ function addDivsToPlayerCards(playerData) {
     }
 
     var gridCells = document.querySelectorAll('.grid');
-    console.log(gridCellDimensions);
 }
 
 function clickCivilian() {
@@ -172,8 +162,16 @@ function clickGreen() {
     }
 
     var cardId = this.parentNode.parentNode.id;
-    console.log(cardId);
     socket.emit('markGreen', cardId);
+}
+
+function clear() {
+    while (board.hasChildNodes()) {
+        board.removeChild(board.lastChild); // removes all grid squares
+    }
+    while (playerCard.hasChildNodes()) {
+        playerCard.removeChild(playerCard.lastChild);
+    }
 }
 
 window.onload = setupGame();

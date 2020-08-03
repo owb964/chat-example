@@ -41,12 +41,10 @@ io.on('connection', function(socket) {
   });
 
   socket.on('markGreen', function(cardId) {
-    console.log(cardId);
     socket.broadcast.emit('markCardGreen', cardId);
   });
 
   socket.on('updateTurns', function(increase) {
-    console.log("update turns");
     socket.broadcast.emit('updateTurnCounter', increase);
   });
 
@@ -98,28 +96,42 @@ function setup() {
       indices[index] = indices[bound-1];
       bound--;
     }
+    spy1Cards.sort(function(a, b) {
+        return a - b;
+    });
+    spy2Cards.sort(function(a, b) {
+        return a - b;
+    });
     spies[spyIDs[0]].cards = spy1Cards;
     spies[spyIDs[1]].cards = spy2Cards;
 
-    // pick assassins
-    var spy1Asses = [], spy2Asses = [];
-    var indicesCopy = [...indices];
-    var boundCopy = bound;
-    for (i = 0; i < 3; i++) {
-      var index = Math.floor(Math.random() * bound);
-      var index2 = Math.floor(Math.random() * bound);
-      spy1Asses.push(indices[index]);
-      spy2Asses.push(indicesCopy[index2]);
-      indices[index] = indices[bound-1];
-      indicesCopy[index2] = indicesCopy[bound-1];
-      bound--;
-    }
-    spies[spyIDs[0]].assassins = spy1Asses;
-    spies[spyIDs[1]].assassins = spy2Asses;
+    spies[spyIDs[0]].assassins = pickAssassins(spy1Cards);
+    spies[spyIDs[1]].assassins = pickAssassins(spy2Cards);
 
     io.emit('initGrid', codeWords);
     io.to(spyIDs[0]).emit('initPlayerCard', spies[spyIDs[0]]);
     io.to(spyIDs[1]).emit('initPlayerCard', spies[spyIDs[1]]);
+}
 
-    console.log(spies);
+function pickAssassins(cards) {
+    var choices = [], cardIndex = 0, choiceIndex = 0;
+    while (choiceIndex < 25) {
+        if (cardIndex < cards.length && choiceIndex < cards[cardIndex]) {
+            choices.push(choiceIndex);
+        } else if (cardIndex < cards.length && choiceIndex == cards[cardIndex]) {
+            cardIndex++;
+        } else {
+            choices.push(choiceIndex);
+        }
+        choiceIndex++;
+    }
+
+    var assassins = [];
+    var bound = choices.length;
+    for (var i = 0; i < 3; i++) {
+        var index = Math.floor(Math.random() * bound);
+        assassins.push(choices[index]);
+        choices[index] = choices[bound-i-1];
+    }
+    return assassins;
 }

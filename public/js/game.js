@@ -3,6 +3,29 @@ var playerCard = document.querySelector('.player-card');
 var socket = io();
 
 function setupGame() {
+    $('button').click(function(e) {
+        var button_classes, value = +$('.counter').val();
+        button_classes = $(e.currentTarget).prop('class');
+        if (button_classes.indexOf('up_count') !== -1) {
+            value = (value) + 1;
+            socket.emit('updateTurns', true);
+        } else {
+            value = (value) - 1;
+            socket.emit('updateTurns', false);
+        }
+        value = value < 0 ? 0 : value;
+        $('.counter').val(value);
+    });
+
+    socket.on('updateTurnCounter', function(increase) {
+        var curr = parseInt($('.counter').val());
+        if (increase) {
+            $('.counter').val(curr + 1);
+        } else {
+            if (curr > 0) $('.counter').val(curr - 1);
+        }
+    });
+
     socket.on("disconnect", function() {
         clear();
     });

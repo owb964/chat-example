@@ -44,6 +44,12 @@ io.on('connection', function(socket) {
     console.log(cardId);
     socket.broadcast.emit('markCardGreen', cardId);
   });
+
+  socket.on('updateTurns', function(increase) {
+    console.log("update turns");
+    socket.broadcast.emit('updateTurnCounter', increase);
+  });
+
 });
 
 http.listen(port, function(){

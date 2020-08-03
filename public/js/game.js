@@ -107,8 +107,6 @@ function addDivsToGameBoard(codeWords) {
         gridSize--;
         wordCounter++;
     }
-
-    var gridCells = document.querySelectorAll('.grid');
 }
 
 function addDivsToPlayerCards(playerData) {
@@ -117,9 +115,6 @@ function addDivsToPlayerCards(playerData) {
 
     const cards = playerData.cards;
     const asses = playerData.assassins;
-    asses.sort(function(a, b) {
-        return a - b;
-    });
 
     var cardIndex = 0, assIndex = 0, gridCounter = 0;
     // create grid squares & add to player card
@@ -142,8 +137,6 @@ function addDivsToPlayerCards(playerData) {
         gridSize--;
         gridCounter++;
     }
-
-    var gridCells = document.querySelectorAll('.grid');
 }
 
 function clickCivilian() {

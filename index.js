@@ -133,5 +133,9 @@ function pickAssassins(cards) {
         assassins.push(choices[index]);
         choices[index] = choices[bound-i-1];
     }
+    assassins.sort(function(a, b) {
+        return a - b;
+    });
+    console.log("assassins: " + assassins);
     return assassins;
 }

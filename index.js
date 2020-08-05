@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var fs = require('fs');
 
-var spies = {};
+var players = {};
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
@@ -14,28 +14,50 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket) {
   console.log('a user connected');
+//  console.log(io.sockets.adapter.rooms);
+//  socket.join("adam");
+//  console.log(io.sockets.adapter.rooms);
+//  console.log("");
 
-  if (Object.keys(spies).length == 0) {
-    spies[socket.id] = {
-      cards: null,
-      assassins: null
-    };
-  }
+//  if (Object.keys(players).length == 0) {
+//    players[socket.id] = {
+//      cards: null,
+//      assassins: null
+//    };
+//  }
+//
+//  else if (Object.keys(players).length == 1) {
+//    players[socket.id] = {
+//      cards: null,
+//      assassins: null
+//    };
+//    setup();
+//  }
 
-  else if (Object.keys(spies).length == 1) {
-    spies[socket.id] = {
-      cards: null,
-      assassins: null
-    };
-    setup();
-  }
+  socket.on('joinRoom', function(roomId) {
+    console.log(roomId);
+    socket.join(roomId);
+    socket.leave(socket.id);
+    var clients = io.sockets.adapter.rooms[roomId].sockets;
+    console.log(clients);
+
+    if (Object.keys(clients).length == 2) {
+        console.log("room length is 2");
+        setup(Object.keys(io.sockets.in(roomId)));
+    }
+    else if (Object.keys(clients).length > 2) {
+        console.log("too many");
+        console.log("There are already 2 players");
+    }
+
+  })
 
   socket.on('disconnect', function () {
     console.log('user disconnected');
 
     // doesn't matter if non-player disconnects
-    if (Object.keys(spies).includes(socket.id)) {
-        spies = {}; // game over
+    if (Object.keys(players).includes(socket.id)) {
+        players = {}; // game over
         io.emit('disconnect');
     }
   });
@@ -54,8 +76,16 @@ http.listen(port, function(){
   console.log('listening on *:' + port);
 });
 
-function setup() {
-    var spyIDs = Object.keys(spies);
+function setup(spyIDs) {
+    players[spyIDs[0]] = {
+      cards: null,
+      assassins: null
+    };
+    players[spyIDs[1]] = {
+      cards: null,
+      assassins: null
+    };
+
     var text = fs.readFileSync("public/assets/words.txt", "utf-8");
     var allWords = text.split("\u21b5").join('');
     var allWords = text.split("\n");
@@ -102,15 +132,15 @@ function setup() {
     spy2Cards.sort(function(a, b) {
         return a - b;
     });
-    spies[spyIDs[0]].cards = spy1Cards;
-    spies[spyIDs[1]].cards = spy2Cards;
+    players[spyIDs[0]].cards = spy1Cards;
+    players[spyIDs[1]].cards = spy2Cards;
 
-    spies[spyIDs[0]].assassins = pickAssassins(spy1Cards);
-    spies[spyIDs[1]].assassins = pickAssassins(spy2Cards);
+    players[spyIDs[0]].assassins = pickAssassins(spy1Cards);
+    players[spyIDs[1]].assassins = pickAssassins(spy2Cards);
 
     io.emit('initGrid', codeWords);
-    io.to(spyIDs[0]).emit('initPlayerCard', spies[spyIDs[0]]);
-    io.to(spyIDs[1]).emit('initPlayerCard', spies[spyIDs[1]]);
+    io.to(spyIDs[0]).emit('initPlayerCard', players[spyIDs[0]]);
+    io.to(spyIDs[1]).emit('initPlayerCard', players[spyIDs[1]]);
 }
 
 function pickAssassins(cards) {
@@ -136,6 +166,5 @@ function pickAssassins(cards) {
     assassins.sort(function(a, b) {
         return a - b;
     });
-    console.log("assassins: " + assassins);
     return assassins;
 }

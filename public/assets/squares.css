@@ -73,20 +73,30 @@ h1{
 
 .counter {
     width: 45px;
+    height: 25px;
     border-radius: 0px !important;
     text-align: center;
 }
 
 .up_count {
     margin-bottom: 10px;
-    margin-left: -4px;
+    margin-left: 2px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
 
 .down_count {
     margin-bottom: 10px;
-    margin-right: -4px;
+    margin-right: 2px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
+}
+
+button {
+    height: 25px;
+    width: 25px;
+}
+
+.enter-room {
+    visibility: visible;
 }

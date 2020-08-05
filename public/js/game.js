@@ -167,4 +167,9 @@ function clear() {
     }
 }
 
+function enterRoom() {
+    var roomId = document.getElementById("room-id").value.trim();
+    socket.emit('joinRoom', roomId);
+}
+
 window.onload = setupGame();

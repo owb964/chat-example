@@ -63,7 +63,9 @@ io.on('connection', function(socket) {
   });
 
   socket.on('markGreen', function(cardId) {
-    socket.broadcast.emit('markCardGreen', cardId);
+    //console.log(socket.rooms);
+    var room = Object.keys(socket.rooms)[0];
+    socket.to(room).emit('markCardGreen', cardId);
   });
 
   socket.on('updateTurns', function(increase) {

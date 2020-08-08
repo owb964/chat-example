@@ -28,6 +28,7 @@ io.on('connection', function(socket) {
 
     if (Object.keys(clients).length < 2) {
         // do nothing
+        io.to(socket.id).emit("showSpinner", roomId);
     }
 
     else if (Object.keys(clients).length == 2) {
@@ -51,11 +52,15 @@ io.on('connection', function(socket) {
         var rooms = Object.keys(io.sockets.adapter.sids[remainingPlayerId]);
         var room = rooms[0] == remainingPlayerId ? rooms[1] : rooms[0];
         var remainingSocket = io.sockets.connected[remainingPlayerId];
-        remainingSocket.leave(room);
+        io.to(room).emit('disconnect', room);
+        //remainingSocket.leave(room);
     }
 
     players = {};
-    io.emit('disconnect');
+  });
+
+  socket.on('abandoned', function(roomId) {
+    socket.leave(roomId);
   });
 
   socket.on('markGreen', function(cardId) {

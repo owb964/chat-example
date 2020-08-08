@@ -1,60 +1,87 @@
 var board = document.querySelector('.game-board');
 var playerCard = document.querySelector('.player-card');
+var turnCounter = document.querySelector('.turn-counter');
 var socket = io();
 
-function setupGame() {
-    $('.down_count').click(function(e) {
-        var value = +$('.counter').val();
-        if (value > 0) {
-            value--;
-            socket.emit('updateTurns', false);
-            $('.counter').val(value);
-        }
-    });
+$('.submitRoomCode').prop('disabled', true);
+    $('#room-id').keyup(function() {
+        $('.submitRoomCode').prop('disabled', this.value.trim() == "" ? true : false);
+    })
 
-    $('.up_count').click(function(e) {
-         var value = +$('.counter').val();
-         value++;
-         socket.emit('updateTurns', true);
-         $('.counter').val(value);
-    });
+$('.down_count').click(function(e) {
+    var value = +$('.counter').val();
+    if (value > 0) {
+        value--;
+        socket.emit('updateTurns', false);
+        $('.counter').val(value);
+    }
+});
 
-    socket.on('updateTurnCounter', function(increase) {
-        var curr = parseInt($('.counter').val());
-        if (increase) {
-            $('.counter').val(curr + 1);
-        } else {
-            if (curr > 0) $('.counter').val(curr - 1);
-        }
-    });
+$('.up_count').click(function(e) {
+     var value = +$('.counter').val();
+     value++;
+     socket.emit('updateTurns', true);
+     $('.counter').val(value);
+});
 
-    socket.on("disconnect", function() {
-        clear();
-    });
+socket.on('showSpinner', function(roomId) {
+    $('#enter-room').hide();
+    var lineBreak = document.createElement("br");
+    var content = document.createTextNode("Your code is " + roomId);
+    $("#waiting").append(lineBreak).append(content);
+   // document.getElementById("waiting").appendChild(content);
+    $('#waiting').show();
+});
 
-    socket.on('initPlayerCard', function(data) {
-        console.log(data);
-        addDivsToPlayerCards(data);
-    });
+socket.on('updateTurnCounter', function(increase) {
+    var curr = parseInt($('.counter').val());
+    if (increase) {
+        $('.counter').val(curr + 1);
+    } else {
+        if (curr > 0) $('.counter').val(curr - 1);
+    }
+});
 
-    socket.on('initGrid', function(codeWords) {
-        document.getElementById("enter-room").style.visibility = "hidden";
-        addDivsToGameBoard(codeWords);
-    });
+socket.on("disconnect", function(room) {
+    while (board.hasChildNodes()) {
+        board.removeChild(board.lastChild); // removes all grid squares
+    }
+    while (playerCard.hasChildNodes()) {
+        playerCard.removeChild(playerCard.lastChild);
+    }
 
-    socket.on('markCardGreen', function(id) {
-        var card = document.getElementById(id);
-        var greenId = "green-" + id.substring(id.indexOf('-') + 1);
-        var greenCheckbox = document.getElementById(greenId);
-        if (greenCheckbox.checked) {
-            greenCheckbox.checked = false;
-            card.style.backgroundColor = '#FFFFFF';
-        } else {
-            greenCheckbox.checked = true;
-            card.style.backgroundColor = '#39FF14';
-        }
-    });
-}
+    $("#enter-room").show();
+    $('#waiting').hide();
+    $('.submitRoomCode').prop('disabled', true);
+    turnCounter.style.visibility = "hidden";
+    socket.emit('abandoned', room);
+});
+
+socket.on('markCardGreen', function(id) {
+    var card = document.getElementById(id);
+    var greenId = "green-" + id.substring(id.indexOf('-') + 1);
+    var greenCheckbox = document.getElementById(greenId);
+    if (greenCheckbox.checked) {
+        greenCheckbox.checked = false;
+        card.style.backgroundColor = '#FFFFFF';
+    } else {
+        greenCheckbox.checked = true;
+        card.style.backgroundColor = '#39FF14';
+    }
+});
+
+socket.on('initPlayerCard', function(data) {
+    console.log(data);
+    addDivsToPlayerCards(data);
+});
+
+socket.on('initGrid', function(codeWords) {
+    $('.counter').val(10);
+    $('#waiting').hide();
+    turnCounter.style.visibility = "visible";
+    $("#enter-room").hide();
+    addDivsToGameBoard(codeWords);
+});
 
 function addDivsToGameBoard(codeWords) {
     var height = ((600 / 5) - 2).toFixed(2);
@@ -167,13 +194,15 @@ function clear() {
     while (playerCard.hasChildNodes()) {
         playerCard.removeChild(playerCard.lastChild);
     }
-    document.getElementById("enter-room").style.visibility = "visible";
+    $("#enter-room").show();
+    $('#waiting').hide();
+    $('.submitRoomCode').prop('disabled', true);
 }
 
 function enterRoom() {
-    var roomId = document.getElementById("room-id").value.trim();
+    var roomId = document.getElementById("room-id").value.trim().toLowerCase();
     document.getElementById("room-id").value = "";
     socket.emit('joinRoom', roomId);
 }
 
-window.onload = setupGame();
+window.onload = $('#waiting').hide();

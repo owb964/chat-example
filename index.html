@@ -11,7 +11,11 @@
   <div id="enter-room">
     <label for="room-id">Enter code:</label><br>
     <input type="text" id="room-id" placeholder="fluffy-puppy"><br>
-    <button style="width: fit-content" onclick="enterRoom()">Submit</button>
+    <button class="submitRoomCode" style="width: fit-content" onclick="enterRoom()">Submit</button>
+  </div>
+  <div id="waiting">
+    <h3>Waiting for someone to join...</h3>
+    <div class="loader"></div>
   </div>
 
   <div class="entire-game">

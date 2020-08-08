@@ -14,62 +14,60 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket) {
   console.log('a user connected');
-//  console.log(io.sockets.adapter.rooms);
-//  socket.join("adam");
-//  console.log(io.sockets.adapter.rooms);
-//  console.log("");
-
-//  if (Object.keys(players).length == 0) {
-//    players[socket.id] = {
-//      cards: null,
-//      assassins: null
-//    };
-//  }
-//
-//  else if (Object.keys(players).length == 1) {
-//    players[socket.id] = {
-//      cards: null,
-//      assassins: null
-//    };
-//    setup();
-//  }
 
   socket.on('joinRoom', function(roomId) {
-    console.log(roomId);
     socket.join(roomId);
-    socket.leave(socket.id);
     var clients = io.sockets.adapter.rooms[roomId].sockets;
-    console.log(clients);
+    var rooms = Object.keys(io.sockets.adapter.sids[socket.id]);
 
-    if (Object.keys(clients).length == 2) {
+    // don't let player be in more than 2 rooms
+    if (rooms.length > 2) {
+        var room = rooms[0] == socket.id ? rooms[1] : rooms[0];
+        socket.leave(room);
+    }
+
+    if (Object.keys(clients).length < 2) {
+        // do nothing
+    }
+
+    else if (Object.keys(clients).length == 2) {
         console.log("room length is 2");
-        setup(Object.keys(io.sockets.in(roomId)));
-    }
-    else if (Object.keys(clients).length > 2) {
-        console.log("too many");
-        console.log("There are already 2 players");
+        setup(Object.keys(clients), socket);
     }
 
+    else {
+        console.log("too many");
+        socket.leave(roomId); // kick 'em out
+    }
   })
 
   socket.on('disconnect', function () {
     console.log('user disconnected');
 
-    // doesn't matter if non-player disconnects
-    if (Object.keys(players).includes(socket.id)) {
-        players = {}; // game over
-        io.emit('disconnect');
+    // if 1 player is still connected, kick 'em out of room
+    if (Object.keys(players).length > 0) {
+        var remainingPlayerId = Object.keys(players)[0] == socket.id ? Object.keys(players)[1] :
+            Object.keys(players)[0];
+        var rooms = Object.keys(io.sockets.adapter.sids[remainingPlayerId]);
+        var room = rooms[0] == remainingPlayerId ? rooms[1] : rooms[0];
+        var remainingSocket = io.sockets.connected[remainingPlayerId];
+        remainingSocket.leave(room);
     }
+
+    players = {};
+    io.emit('disconnect');
   });
 
   socket.on('markGreen', function(cardId) {
-    //console.log(socket.rooms);
-    var room = Object.keys(socket.rooms)[0];
+    var rooms = Object.keys(socket.rooms);
+    var room = rooms[0] == socket.id ? rooms[1] : rooms[0];
     socket.to(room).emit('markCardGreen', cardId);
   });
 
-  socket.on('updateTurns', function(increase) {
-    socket.broadcast.emit('updateTurnCounter', increase);
+  socket.on('updateTurns', function(increase) { // probably need to make it tell room only
+    var rooms = Object.keys(socket.rooms);
+    var room = rooms[0] == socket.id ? rooms[1] : rooms[0];
+    socket.to(room).emit('updateTurnCounter', increase);
   });
 
 });
@@ -78,7 +76,7 @@ http.listen(port, function(){
   console.log('listening on *:' + port);
 });
 
-function setup(spyIDs) {
+function setup(spyIDs, socket) {
     players[spyIDs[0]] = {
       cards: null,
       assassins: null
@@ -139,10 +137,27 @@ function setup(spyIDs) {
 
     players[spyIDs[0]].assassins = pickAssassins(spy1Cards);
     players[spyIDs[1]].assassins = pickAssassins(spy2Cards);
+    console.log(players);
 
-    io.emit('initGrid', codeWords);
+    var rooms1 = Object.keys(io.sockets.adapter.sids[spyIDs[0]]);
+    console.log("rooms1: " + rooms1);
+    var rooms2 = Object.keys(io.sockets.adapter.sids[spyIDs[1]]);
+    console.log("rooms2: " + rooms2);
+    var commonRoom = findCommonRoom(rooms1, rooms2);
+
+    io.to(commonRoom).emit('initGrid', codeWords);
     io.to(spyIDs[0]).emit('initPlayerCard', players[spyIDs[0]]);
     io.to(spyIDs[1]).emit('initPlayerCard', players[spyIDs[1]]);
+}
+
+function findCommonRoom(rooms1, rooms2) {
+    for (var i = 0; i < rooms1.length; i++) {
+        let currRoom = rooms1[i];
+        if (rooms2.includes(currRoom)) {
+            return currRoom;
+        }
+    }
+    return null;
 }
 
 function pickAssassins(cards) {

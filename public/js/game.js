@@ -3,20 +3,20 @@ var playerCard = document.querySelector('.player-card');
 var socket = io();
 
 function setupGame() {
-    $('button').click(function(e) {
-        var button_classes, value = +$('.counter').val();
-        button_classes = $(e.currentTarget).prop('class');
-        if (button_classes.indexOf('up_count') !== -1) {
-            value++;
-            socket.emit('updateTurns', true);
+    $('.down_count').click(function(e) {
+        var value = +$('.counter').val();
+        if (value > 0) {
+            value--;
+            socket.emit('updateTurns', false);
             $('.counter').val(value);
-        } else {
-            if (value > 0) {
-                value--;
-                socket.emit('updateTurns', false);
-                $('.counter').val(value);
-            }
         }
+    });
+
+    $('.up_count').click(function(e) {
+         var value = +$('.counter').val();
+         value++;
+         socket.emit('updateTurns', true);
+         $('.counter').val(value);
     });
 
     socket.on('updateTurnCounter', function(increase) {
@@ -33,11 +33,13 @@ function setupGame() {
     });
 
     socket.on('initPlayerCard', function(data) {
+        console.log(data);
         addDivsToPlayerCards(data);
     });
 
-    socket.on('initGrid', function(codeWords, socket) {
-        addDivsToGameBoard(codeWords, socket);
+    socket.on('initGrid', function(codeWords) {
+        document.getElementById("enter-room").style.visibility = "hidden";
+        addDivsToGameBoard(codeWords);
     });
 
     socket.on('markCardGreen', function(id) {
@@ -165,10 +167,12 @@ function clear() {
     while (playerCard.hasChildNodes()) {
         playerCard.removeChild(playerCard.lastChild);
     }
+    document.getElementById("enter-room").style.visibility = "visible";
 }
 
 function enterRoom() {
     var roomId = document.getElementById("room-id").value.trim();
+    document.getElementById("room-id").value = "";
     socket.emit('joinRoom', roomId);
 }
 

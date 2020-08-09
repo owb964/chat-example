@@ -26,10 +26,13 @@ $('.up_count').click(function(e) {
 
 socket.on('showSpinner', function(roomId) {
     $('#enter-room').hide();
+    $('.waiting-subtitle').empty();
     var lineBreak = document.createElement("br");
-    var content = document.createTextNode("Your code is " + roomId);
-    $("#waiting").append(lineBreak).append(content);
-   // document.getElementById("waiting").appendChild(content);
+    var bold = document.createElement('strong');
+    var roomText = document.createTextNode(roomId);
+    bold.appendChild(roomText);
+    var content = document.createTextNode("Your code is ");
+    $(".waiting-subtitle").append(lineBreak).append(content).append(bold);
     $('#waiting').show();
 });
 
@@ -185,18 +188,6 @@ function clickGreen() {
 
     var cardId = this.parentNode.parentNode.id;
     socket.emit('markGreen', cardId);
-}
-
-function clear() {
-    while (board.hasChildNodes()) {
-        board.removeChild(board.lastChild); // removes all grid squares
-    }
-    while (playerCard.hasChildNodes()) {
-        playerCard.removeChild(playerCard.lastChild);
-    }
-    $("#enter-room").show();
-    $('#waiting').hide();
-    $('.submitRoomCode').prop('disabled', true);
 }
 
 function enterRoom() {

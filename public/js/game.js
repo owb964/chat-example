@@ -1,11 +1,11 @@
 var board = document.querySelector('.game-board');
 var playerCard = document.querySelector('.player-card');
-var turnCounter = document.querySelector('.turn-counter');
 var socket = io();
 
 $('.submitRoomCode').prop('disabled', true);
 $('#room-id').keyup(function() {
-    $('.submitRoomCode').prop('disabled', this.value.trim() == "" ? true : false);
+    $('.submitRoomCode').prop('disabled', this.value == null ||
+        this.value.trim() == "" ? true : false);
 })
 
 $('.down_count').click(function(e) {
@@ -60,7 +60,7 @@ socket.on("disconnect", function(room) {
     $("#enter-room").show();
     $('#waiting').hide();
     $('.submitRoomCode').prop('disabled', true);
-    turnCounter.style.visibility = "hidden";
+    $('#entire-game').hide();
     $('#abandoned').show();
     socket.emit('abandoned', room);
 });
@@ -81,12 +81,12 @@ socket.on('markCardGreen', function(id) {
 socket.on('initPlayerCard', function(data) {
     console.log(data);
     addDivsToPlayerCards(data);
+    $('#entire-game').show();
 });
 
 socket.on('initGrid', function(codeWords) {
     $('.counter').val(10);
     $('#waiting').hide();
-    turnCounter.style.visibility = "visible";
     $("#enter-room").hide();
     addDivsToGameBoard(codeWords);
 });

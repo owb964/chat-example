@@ -27,6 +27,7 @@ io.on('connection', function(socket) {
     }
 
     if (Object.keys(clients).length < 2) {
+        // do nothing
         io.to(socket.id).emit("showSpinner", roomId);
     }
 

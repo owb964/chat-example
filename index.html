@@ -8,20 +8,20 @@
     <h1>Codenames Duet</h1>
   </div>
 
-  <div id="enter-room">
+  <div id="enter-room" style="text-align: center">
     <label for="room-id">Enter code:</label><br>
-    <input type="text" id="room-id" placeholder="fluffy-puppy"><br>
+    <input type="text" id="room-id" placeholder="fluffy-puppy">
     <button class="submitRoomCode" style="width: fit-content" onclick="enterRoom()">Submit</button>
     <div id="cannot-join" style="color:red; display:none">This code is already in use by 2 players</div>
     <div id="abandoned" style="color:red; display:none">Your teammate abandoned you :(</div>
   </div>
-  <div id="waiting" style="display:none">
+  <div id="waiting" style="display:none; text-align: center">
     <h3>Waiting for someone to join...</h3>
     <div class="loader"></div>
     <div class="waiting-subtitle"></div>
   </div>
 
-  <div class="entire-game">
+  <div id="entire-game" style="display:none">
     <div class="game-board"></div>
     <div class="player-card-and-turns">
       <br>

@@ -21,6 +21,7 @@ Atlantis
 Aunt
 Avocado
 Babysitter
+Bachelor
 Bag
 Baguette
 Bald
@@ -34,6 +35,7 @@ Bat
 Battery
 Beach
 Beanstalk
+Bed
 Bedbug
 Beer
 Beethoven
@@ -65,6 +67,7 @@ Booth
 Bowtie
 Box
 Boy
+Bra
 Braid
 Brainstorm
 Brand
@@ -80,6 +83,7 @@ Bubble
 Buddy
 Buffalo
 Bulb
+Bumble
 Bunny
 Bus
 Butt
@@ -389,6 +393,7 @@ Mountain
 Mouse
 Mower
 Mud
+Museum
 Music
 Mute
 Nature
@@ -607,6 +612,7 @@ Teenager
 Telephone
 Ten
 Tennis
+The Lion King
 Thief
 Think
 Throne
@@ -638,6 +644,7 @@ Tutor
 Television
 Twig
 Type
+Underwear
 Unemployed
 Upgrade
 Vest
@@ -660,6 +667,7 @@ Wish
 Wolf
 Wool
 World
+World War II
 Worm
 Wreck
 Wristwatch

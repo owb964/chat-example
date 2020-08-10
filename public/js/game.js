@@ -4,9 +4,9 @@ var turnCounter = document.querySelector('.turn-counter');
 var socket = io();
 
 $('.submitRoomCode').prop('disabled', true);
-    $('#room-id').keyup(function() {
-        $('.submitRoomCode').prop('disabled', this.value.trim() == "" ? true : false);
-    })
+$('#room-id').keyup(function() {
+    $('.submitRoomCode').prop('disabled', this.value.trim() == "" ? true : false);
+})
 
 $('.down_count').click(function(e) {
     var value = +$('.counter').val();
@@ -23,6 +23,10 @@ $('.up_count').click(function(e) {
      socket.emit('updateTurns', true);
      $('.counter').val(value);
 });
+
+socket.on('codeTaken', function() {
+    $('#cannot-join').show();
+})
 
 socket.on('showSpinner', function(roomId) {
     $('#enter-room').hide();
@@ -57,6 +61,7 @@ socket.on("disconnect", function(room) {
     $('#waiting').hide();
     $('.submitRoomCode').prop('disabled', true);
     turnCounter.style.visibility = "hidden";
+    $('#abandoned').show();
     socket.emit('abandoned', room);
 });
 
@@ -136,6 +141,7 @@ function addDivsToGameBoard(codeWords) {
         newDiv.appendChild(document.createElement("br"));
         civCheckbox.addEventListener("change", clickCivilian);
 
+        newDiv.style.fontFamily = "sans-serif";
         gridSize--;
         wordCounter++;
     }
@@ -191,9 +197,9 @@ function clickGreen() {
 }
 
 function enterRoom() {
+    $('#cannot-join').hide();
+    $('#abandoned').hide();
     var roomId = document.getElementById("room-id").value.trim().toLowerCase();
     document.getElementById("room-id").value = "";
     socket.emit('joinRoom', roomId);
 }
-
-window.onload = $('#waiting').hide();

@@ -27,7 +27,6 @@ io.on('connection', function(socket) {
     }
 
     if (Object.keys(clients).length < 2) {
-        // do nothing
         io.to(socket.id).emit("showSpinner", roomId);
     }
 
@@ -38,6 +37,7 @@ io.on('connection', function(socket) {
 
     else {
         console.log("too many");
+        io.to(socket.id).emit("codeTaken");
         socket.leave(roomId); // kick 'em out
     }
   })
@@ -69,7 +69,7 @@ io.on('connection', function(socket) {
     socket.to(room).emit('markCardGreen', cardId);
   });
 
-  socket.on('updateTurns', function(increase) { // probably need to make it tell room only
+  socket.on('updateTurns', function(increase) {
     var rooms = Object.keys(socket.rooms);
     var room = rooms[0] == socket.id ? rooms[1] : rooms[0];
     socket.to(room).emit('updateTurnCounter', increase);
@@ -77,7 +77,7 @@ io.on('connection', function(socket) {
 
 });
 
-http.listen(port, function(){
+http.listen(port, function() {
   console.log('listening on *:' + port);
 });
 

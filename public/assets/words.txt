@@ -212,7 +212,7 @@ Escalator
 Eureka
 Europe
 Evolution
-Expode
+Explode
 Extension
 Eyebrow
 Fan
@@ -220,7 +220,6 @@ Fancy
 Fast
 Feast
 Fence
-Feudalism
 Fiddle
 Figment
 Finger
@@ -233,7 +232,6 @@ Flagpole
 Flannel
 Flashlight
 Flock
-Flotsam
 Flower
 Flu
 Flush

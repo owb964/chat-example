@@ -35,7 +35,7 @@ socket.on('showSpinner', function(roomId) {
     var bold = document.createElement('strong');
     var roomText = document.createTextNode(roomId);
     bold.appendChild(roomText);
-    var content = document.createTextNode("Your code is ");
+    var content = document.createTextNode("Your team name is ");
     $(".waiting-subtitle").append(lineBreak).append(content).append(bold);
     $('#waiting').show();
 });

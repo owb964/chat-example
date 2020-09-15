@@ -33,7 +33,7 @@ io.on('connection', function(socket) {
 
     else if (Object.keys(clients).length == 2) {
         console.log("room length is 2");
-        setup(Object.keys(clients), socket);
+        setup(Object.keys(clients), socket, roomId);
     }
 
     else {
@@ -46,18 +46,19 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function () {
     console.log('user disconnected');
 
-    // if 1 player is still connected, kick 'em out of room
-    if (Object.keys(players).length > 0) {
-        var remainingPlayerId = Object.keys(players)[0] == socket.id ? Object.keys(players)[1] :
-            Object.keys(players)[0];
-        var rooms = Object.keys(io.sockets.adapter.sids[remainingPlayerId]);
-        var room = rooms[0] == remainingPlayerId ? rooms[1] : rooms[0];
-        var remainingSocket = io.sockets.connected[remainingPlayerId];
-        io.to(room).emit('disconnect', room);
-        //remainingSocket.leave(room);
+    if (!(socket.id in players)) {
+        console.log("not a player");
+        return;
     }
 
-    players = {};
+    var room = players[socket.id].room;
+    console.log(room);
+    var roomObj = io.sockets.adapter.rooms[room];
+    var remainingSockets = Object.keys(roomObj.sockets);
+    console.log(remainingSockets)
+    remainingSockets.forEach(id => delete players[id]);
+    io.to(room).emit('disconnect', room);
+    delete players[socket.id]; // delete player that originally disconnected
   });
 
   socket.on('abandoned', function(roomId) {
@@ -82,14 +83,16 @@ http.listen(port, function() {
   console.log('listening on *:' + port);
 });
 
-function setup(spyIDs, socket) {
+function setup(spyIDs, socket, roomId) {
     players[spyIDs[0]] = {
       cards: null,
-      assassins: null
+      assassins: null,
+      room: roomId
     };
     players[spyIDs[1]] = {
       cards: null,
-      assassins: null
+      assassins: null,
+      room: roomId
     };
 
     var text = fs.readFileSync("public/assets/words.txt", "utf-8");
@@ -146,9 +149,7 @@ function setup(spyIDs, socket) {
     console.log(players);
 
     var rooms1 = Object.keys(io.sockets.adapter.sids[spyIDs[0]]);
-    console.log("rooms1: " + rooms1);
     var rooms2 = Object.keys(io.sockets.adapter.sids[spyIDs[1]]);
-    console.log("rooms2: " + rooms2);
     var commonRoom = findCommonRoom(rooms1, rooms2);
 
     io.to(commonRoom).emit('initGrid', codeWords);

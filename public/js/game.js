@@ -66,6 +66,7 @@ socket.on("disconnect", function(room) {
     $('#waiting').hide();
     $('.submitRoomCode').prop('disabled', true);
     $('#entire-game').hide();
+    $('#entire-game').css('display', 'none');
     $('#abandoned').show();
     socket.emit('abandoned', room);
 });
@@ -87,6 +88,7 @@ socket.on('initPlayerCard', function(data) {
     console.log(data);
     addDivsToPlayerCards(data);
     $('#entire-game').show();
+    $('#entire-game').css('display', 'flex');
 });
 
 socket.on('initGrid', function(codeWords) {

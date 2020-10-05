@@ -17,7 +17,7 @@
     <div>Have your partner enter the same team name as you</div>
     <div>Then the game will start!</div>
     <div id="cannot-join" style="color:red; display:none">This name is already in use by 2 players</div>
-    <div id="abandoned" style="color:red; display:none">Your teammate abandoned you :(</div>
+    <div id="abandoned" style="color:red; display:none; margin-top:20px">Your teammate abandoned you :(</div>
   </div>
   <div id="waiting" style="display:none; text-align: center">
     <h3>Waiting for someone to join...</h3>
@@ -39,11 +39,15 @@
           <button class='up_count' title='Up'>+</button>
         </div>
       </div>
+      <div class="regenerate">
+        <button style="width: fit-content" onclick="regenerate()">Regenerate Board</button>
+      </div>
     </div>
   </div>
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@1.2.0/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="js/game.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@1.2.0/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="js/game.js"></script>
 
   </body>
 </html>

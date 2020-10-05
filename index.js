@@ -32,30 +32,34 @@ io.on('connection', function(socket) {
     }
 
     else if (Object.keys(clients).length == 2) {
-        console.log("room length is 2");
-        setup(Object.keys(clients), socket, roomId);
+        setup(Object.keys(clients), roomId);
     }
 
     else {
-        console.log("too many");
         io.to(socket.id).emit("codeTaken");
         socket.leave(roomId); // kick 'em out
     }
   })
 
-  socket.on('disconnect', function () {
+  socket.on('regenerate', function() {
+    if (players[socket.id] != null) {
+        var roomId = players[socket.id].room;
+        var clients = io.sockets.adapter.rooms[roomId].sockets;
+        io.to(roomId).emit('tearDown', roomId);
+        setup(Object.keys(clients), roomId);
+    }
+  })
+
+  socket.on('disconnect', function() {
     console.log('user disconnected');
 
     if (!(socket.id in players)) {
-        console.log("not a player");
         return;
     }
 
     var room = players[socket.id].room;
-    console.log(room);
     var roomObj = io.sockets.adapter.rooms[room];
     var remainingSockets = Object.keys(roomObj.sockets);
-    console.log(remainingSockets)
     remainingSockets.forEach(id => delete players[id]);
     io.to(room).emit('disconnect', room);
     delete players[socket.id]; // delete player that originally disconnected
@@ -83,7 +87,7 @@ http.listen(port, function() {
   console.log('listening on *:' + port);
 });
 
-function setup(spyIDs, socket, roomId) {
+function setup(spyIDs, roomId) {
     players[spyIDs[0]] = {
       cards: null,
       assassins: null,

@@ -55,12 +55,7 @@ socket.on('updateTurnCounter', function(increase) {
 });
 
 socket.on("disconnect", function(room) {
-    while (board.hasChildNodes()) {
-        board.removeChild(board.lastChild); // removes all grid squares
-    }
-    while (playerCard.hasChildNodes()) {
-        playerCard.removeChild(playerCard.lastChild);
-    }
+    removeGrids();
 
     $("#enter-room").show();
     $('#waiting').hide();
@@ -69,6 +64,10 @@ socket.on("disconnect", function(room) {
     $('#entire-game').css('display', 'none');
     $('#abandoned').show();
     socket.emit('abandoned', room);
+});
+
+socket.on("tearDown", function(room) {
+    removeGrids();
 });
 
 socket.on('markCardGreen', function(id) {
@@ -212,4 +211,17 @@ function enterRoom() {
     var roomId = document.getElementById("room-id").value.trim().toLowerCase();
     document.getElementById("room-id").value = "";
     socket.emit('joinRoom', roomId);
+}
+
+function regenerate() {
+    socket.emit('regenerate');
+}
+
+function removeGrids() {
+    while (board.hasChildNodes()) {
+        board.removeChild(board.lastChild); // removes all grid squares
+    }
+    while (playerCard.hasChildNodes()) {
+        playerCard.removeChild(playerCard.lastChild);
+    }
 }

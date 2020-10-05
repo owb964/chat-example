@@ -101,7 +101,10 @@ function addDivsToGameBoard(codeWords) {
     while (gridSize > 0) {
         var newDiv = document.createElement('div');
         newDiv.id = "card-" + wordCounter;
-        newDiv.textContent = codeWords[wordCounter];
+        var codeWord = document.createElement('label');
+        codeWord.style.margin = '4px';
+        codeWord.appendChild(document.createTextNode(codeWords[wordCounter]));
+        newDiv.appendChild(codeWord);
         board.appendChild(newDiv);
         newDiv.classList.add('grid');
         newDiv.style.height = height + 'px';

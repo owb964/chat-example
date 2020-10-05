@@ -2,6 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="assets/squares.css" type="text/css">
+    <link rel="icon" href="assets/spy.png">
   </head>
   <body>
   <div id="header" style="margin-bottom: 50px">
@@ -31,9 +32,12 @@
       <div class="player-card"></div>
       <br>
       <div class="turn-counter">
-        <button class='down_count' title='Down'>-</button>
-        <input id='counter' class='counter' type="number" readonly value=10 />
-        <button class='up_count' title='Up'>+</button>
+        <label style="display:inline-block; margin-bottom:10px">Turn Counter</label>
+        <div>
+          <button class='down_count' title='Down'>-</button>
+          <input id='counter' class='counter' type="number" readonly value=10 />
+          <button class='up_count' title='Up'>+</button>
+        </div>
       </div>
     </div>
   </div>

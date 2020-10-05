@@ -3,9 +3,14 @@ var playerCard = document.querySelector('.player-card');
 var socket = io();
 
 $('.submitRoomCode').prop('disabled', true);
+
 $('#room-id').keyup(function() {
     $('.submitRoomCode').prop('disabled', this.value == null ||
         this.value.trim() == "" ? true : false);
+
+    if (event.keyCode === 13 && !($('.submitRoomCode').prop('disabled'))) {
+        $(".submitRoomCode").click();
+    }
 })
 
 $('.down_count').click(function(e) {

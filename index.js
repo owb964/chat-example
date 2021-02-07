@@ -189,7 +189,8 @@ function pickAssassins(cards) {
     for (var i = 0; i < 3; i++) {
         var index = Math.floor(Math.random() * bound);
         assassins.push(choices[index]);
-        choices[index] = choices[bound-i-1];
+        choices[index] = choices[bound-1];
+        bound--;
     }
     assassins.sort(function(a, b) {
         return a - b;
